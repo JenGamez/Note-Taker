@@ -5,6 +5,8 @@
 // ===============================================================================
 
 var dbJSON = require("../db/db.json");
+// Returns the unique ID
+var uniqueID = require("uniqid");
 
 // ===============================================================================
 // ROUTING
@@ -32,15 +34,17 @@ module.exports = function(app) {
 
   app.post("/api/notes", function(req, res) {
     
-    // Create New Note - takes in JSON input
+    // Create note - takes in JSON input
     // "Server" will respond to requests and let users know if they have a note or not.
     // It will do this by sending out the value "true" have a note
     // req.body is available since we're using the body parsing middleware. req.body hosts is equal to the JSON post sent from the user
-  var newNote = req.body;
-  console.log(newNote);
-  dbJSON.push(newNote);
+  var note = req.body;
+  note.id = uniqueID();
+  console.log(note);
+  dbJSON.push(note);
 
-
+// Needed to send response of original note, Which triggered the .then
+res.json(note);
 
   });
 
@@ -55,4 +59,17 @@ module.exports = function(app) {
 
     res.json({ ok: true });
   });
+
+  app.delete("/api/notes/:id", function(req, res) {
+    dbJSON.forEach(function(element, index) {
+      if (element.id === req.params.id) {
+        dbJSON.splice(index, 1)
+        res.json(dbJSON)
+      } 
+    })
+
+  })
+
 };
+
+

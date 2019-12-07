@@ -4,6 +4,7 @@
 // ==============================================================================
 
 var express = require("express");
+var fs = require("fs");
 
 // ==============================================================================
 // EXPRESS CONFIGURATION
@@ -20,6 +21,9 @@ var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// With every response that we send to the client, include that public
+app.use(express.static("public"))
+
 // ================================================================================
 // ROUTER
 // The below points our server to a series of "route" files.
@@ -28,6 +32,9 @@ app.use(express.json());
 
 require("./routes/apiRoutes")(app);
 require("./routes/htmlRoutes")(app);
+
+// Code to
+
 
 // =============================================================================
 // LISTENER
